@@ -1,11 +1,12 @@
 import React from "react";
+import OptionsButton from "./components/OptionsButton.jsx";
 
 const App = () => {
 	return (
-		<h1>
-			Hello world!
-		</h1>
-	)
+		<>
+			<OptionsButton />
+		</>
+	);
 }
 
 export default App
