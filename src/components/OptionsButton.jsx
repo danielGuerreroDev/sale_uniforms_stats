@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import MainContainer from "./MainContainer.jsx";
+import {
+	Link
+} from 'react-router-dom';
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -37,7 +39,13 @@ const OptionsButton = () => {
 					'aria-labelledby': 'basic-button',
 				}}
 			>
-				<MenuItem onClick={optionsMenuClick}>A</MenuItem>
+				<MenuItem
+					component={Link}
+					to="/pages/BestSellingSize"
+					onClick={optionsMenuClick}
+				>
+					A
+				</MenuItem>
 				<MenuItem onClick={optionsMenuClick}>B</MenuItem>
 				<MenuItem onClick={optionsMenuClick}>C</MenuItem>
 			</Menu>
