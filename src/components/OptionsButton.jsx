@@ -5,21 +5,13 @@ import MenuItem from "@mui/material/MenuItem";
 import Axios from "axios";
 import { BarChart } from "@mui/x-charts/BarChart";
 import MainContainer from "../components/MainContainer.jsx";
-import { makeStyles } from "@mui/styles";
-
-const styles = makeStyles({
-  hola: {
-    '& .MuiButtonBase-root': {
-      color: 'red !important',
-    },
-  },
-});
 
 const OptionsButton = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [options, setOptions] = useState(null);
   const [data, setData] = useState(null);
+  const [title, setTitle] = useState(null);
 
   const getOptions = () => {
     options
@@ -43,28 +35,22 @@ const OptionsButton = () => {
     getOptions();
   }, []);
 
-  // const rows = data?.map((item) => (
-  // 	item.id
-  // ));
-
   const optionsMapped = options?.map((option) => {
     return (
-      <MenuItem key={option.id} onClick={() => optionsMenuItem(option.api)}>
+      <MenuItem key={option.id} onClick={() => optionsMenuItem(option.api, option.name)}>
         {option.name}
       </MenuItem>
     );
   });
-
-  console.log(options);
-  console.log(data);
 
   const optionsButton = (event) => {
     setOpen(!open);
     setAnchorEl(event.currentTarget);
   };
 
-  const optionsMenuItem = (value) => {
-    getData(value);
+  const optionsMenuItem = (api, name) => {
+    getData(api);
+    setTitle(name);
     setOpen(!open);
   };
 
@@ -80,21 +66,19 @@ const OptionsButton = () => {
     return parseInt(value.amount);
   });
 
-  const classes = styles();
-
   const component = data ? (
     <BarChart
       xAxis={[{ scaleType: "band", data: cAxisData }]}
       series={[{ data: seriesData }]}
       width={920}
       height={600}
+      bottomAxis={null}
     />
   ) : null;
 
   return (
     <>
       <Button
-        className={classes.hola}
         id="options-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
@@ -114,15 +98,9 @@ const OptionsButton = () => {
       >
         {optionsMapped}
       </Menu>
-      <MainContainer component={component} />
+      <MainContainer title={title} component={component} />
     </>
   );
 };
 
 export default OptionsButton;
-// The implementation has changed;
-// - Router doesn't necessary
-// quitar modulos react-router-dom
-// display:none con Styles en labels horizontales
-// poner titulo de la opción seleccionada / arriba
-// before - mui v5
