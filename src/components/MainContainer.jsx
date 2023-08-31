@@ -1,7 +1,7 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from 'tss-react/mui';
 
-const styles = makeStyles({
+const styles = makeStyles()({
 	mainContainer: {
 		alignItems: 'center',
 		display: 'flex !important',
@@ -11,12 +11,13 @@ const styles = makeStyles({
 	}
 });
 
-const MainContainer = ({ component }) => {
-	const classes = styles();
+const MainContainer = ({ title, component }) => {
+	const { classes } = styles();
 
 	return (
 		<>
 			<div className={classes.mainContainer}>
+				{title? <h2>{title}</h2> : null}
 				{component}
 			</div>
 		</>
