@@ -8,10 +8,13 @@ import MainContainer from "../components/MainContainer.jsx";
 
 const OptionsButton = () => {
   const [open, setOpen] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [options, setOptions] = useState(null);
   const [data, setData] = useState(null);
+  const [dataDetail, setDataDetail] = useState(null);
   const [title, setTitle] = useState(null);
+  const [name, setName] = useState(null);
 
   const getOptions = () => {
     options
@@ -23,6 +26,15 @@ const OptionsButton = () => {
         );
   };
 
+  const getDetailOptions = (api, name) => {
+    const nameCapitalized = name[0].toUpperCase() + name.substring(1);
+    Axios.get(`https://quetzal-hug.com/api/${api + nameCapitalized}.php`).then(
+      (res) => {
+        setData(res.data);
+      }
+    );
+  };
+
   const getData = (value) => {
     value
       ? Axios.get(`https://quetzal-hug.com/api/${value}.php`).then((res) => {
@@ -31,14 +43,38 @@ const OptionsButton = () => {
       : null;
   };
 
+  const getDataDetail = (api, id) => {
+    api
+      ? Axios.get(`https://quetzal-hug.com/api/${api + id}.php`).then((res) => {
+          setDataDetail(res.data);
+        })
+      : null;
+  };
+
   useEffect(() => {
     getOptions();
-  }, []);
+  }, [options]);
 
   const optionsMapped = options?.map((option) => {
     return (
-      <MenuItem key={option.id} onClick={() => optionsMenuItem(option.api, option.name)}>
+      <MenuItem
+        key={option.id}
+        onClick={() => optionsMenuItem(option.id, option.api, option.name)}
+      >
         {option.name}
+      </MenuItem>
+    );
+  });
+
+  const optionsDetailMapped = dataDetail?.map((option) => {
+    return (
+      <MenuItem
+        key={option.id_detail}
+        onClick={() =>
+          optionsDetailMenuItem(option.api_detail, option.name_detail)
+        }
+      >
+        {option.name_detail}
       </MenuItem>
     );
   });
@@ -48,14 +84,30 @@ const OptionsButton = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const optionsMenuItem = (api, name) => {
+  const optionsDetailButton = () => {
+    setOpenDetail(!openDetail);
+  };
+
+  const optionsMenuItem = (id, api, name) => {
     getData(api);
+    getDataDetail(api, id);
     setTitle(name);
     setOpen(!open);
+    setName(null);
+  };
+
+  const optionsDetailMenuItem = (api, name) => {
+    getDetailOptions(api, name);
+    setName(name);
+    setOpenDetail(!openDetail);
   };
 
   const onClose = () => {
     setOpen(!open);
+  };
+
+  const onCloseDetail = () => {
+    setOpenDetail(!openDetail);
   };
 
   const cAxisData = data?.map((item) => {
@@ -76,6 +128,33 @@ const OptionsButton = () => {
     />
   ) : null;
 
+  const DetailButton = () => {
+    return (
+      <>
+        <Button
+          id="options-detail-button"
+          aria-controls={openDetail ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={openDetail ? "true" : undefined}
+          onClick={optionsDetailButton}
+        >
+          Buscar por escuela
+        </Button>
+        <Menu
+          id="options-detail-menu"
+          anchorEl={anchorEl}
+          open={openDetail}
+          onClose={onCloseDetail}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          {optionsDetailMapped}
+        </Menu>
+      </>
+    );
+  };
+
   return (
     <>
       <Button
@@ -85,7 +164,7 @@ const OptionsButton = () => {
         aria-expanded={open ? "true" : undefined}
         onClick={optionsButton}
       >
-        Options
+        Opciones
       </Button>
       <Menu
         id="options-menu"
@@ -98,7 +177,13 @@ const OptionsButton = () => {
       >
         {optionsMapped}
       </Menu>
-      <MainContainer title={title} component={component} />
+
+      {dataDetail ? <DetailButton /> : null}
+
+      <MainContainer
+        title={name ? title + " " + name : title}
+        component={component}
+      />
     </>
   );
 };
