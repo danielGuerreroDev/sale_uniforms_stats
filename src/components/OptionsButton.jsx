@@ -47,6 +47,8 @@ const OptionsButton = () => {
     api
       ? Axios.get(`https://quetzal-hug.com/api/${api + id}.php`).then((res) => {
           setDataDetail(res.data);
+        }).catch(err => {
+          setDataDetail(null);
         })
       : null;
   };
