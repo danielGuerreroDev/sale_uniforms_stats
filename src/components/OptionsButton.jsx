@@ -118,15 +118,15 @@ const OptionsButton = () => {
     return parseInt(value.amount);
   });
 
-  const component = data ? (
+  const component = (
     <BarChart
-      xAxis={[{ scaleType: "band", data: cAxisData }]}
-      series={[{ data: seriesData }]}
+      xAxis={[{ scaleType: "band", data: data ? cAxisData : ["Sin datos"] }]}
+      series={[{ data: data ? seriesData : [0] }]}
       width={920}
       height={600}
       bottomAxis={null}
     />
-  ) : null;
+  );
 
   const DetailButton = () => {
     return (
