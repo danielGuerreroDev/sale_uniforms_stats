@@ -112,8 +112,8 @@ const OptionsButton = () => {
     setOpenDetail(!openDetail);
   };
 
-  const cAxisData = data?.map((item) => {
-    return item.detail;
+  const cAxisData = data?.map((item, index) => {
+    return item.detail + '___Pos' + (index + 1);
   });
 
   const seriesData = data?.map((value) => {
